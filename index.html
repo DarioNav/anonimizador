@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Aplicación gratuita para anonimizar documentos judiciales sin internet y usar la IA sin exponer datos sensibles. Desarrollada por Darío Saul Navarro.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Anonimizador judicial · gratis y sin internet">
+<meta property="og:description" content="Usá la IA con tus expedientes sin exponer datos sensibles. Descargalo gratis.">
+<meta property="og:image" content="https://darionav.github.io/anonimizador/img/05-vista-previa.jpg">
+<meta property="og:url" content="https://darionav.github.io/anonimizador/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%237a4dff%27/%3E%3Cpath d=%27M18 10h20l10 10v34H18z%27 fill=%27%23fff%27/%3E%3Crect x=%2723%27 y=%2726%27 width=%2720%27 height=%275%27 rx=%271.5%27 fill=%27%230b1220%27/%3E%3Crect x=%2723%27 y=%2735%27 width=%2714%27 height=%275%27 rx=%271.5%27 fill=%27%230b1220%27/%3E%3C/svg%3E">
+<title>Anonimizador judicial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap">
+<style>
+/* Layout: banda de marca con degradé (igual que la app) → página clara de lectura; el "expediente" que se tacha es el hilo visual. */
+:root {
+  --bg: #f5f6fb;
+  --surface: #ffffff;
+  --ink: #10142a;
+  --mut: #4b5170;
+  --line: #e2e4f0;
+  --accent: #5b3df5;
+  --accent-ink: #ffffff;
+  --hot: #ff5a7a;
+  --ok: #0b7a4b;
+  --grad: linear-gradient(100deg, #3a2bd9 0%, #7a4dff 26%, #c04bff 48%, #ff4f8b 70%, #ff8a3c 90%, #ffb64a 100%);
+  --paper: #fffdf8;
+  --paper-ink: #1d1a14;
+  --t-person: #ffd9a8; --t-org: #dccdfb; --t-doc: #bfe8cc; --t-dom: #bfe0fb; --t-tel: #fbcbe0; --t-exp: #ece5b0;
+  --tag-ink: #1d1a14;
+  --shadow: 0 1px 2px rgba(16, 20, 42, .06), 0 18px 40px -18px rgba(40, 30, 120, .35);
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --f-doc: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0f1c; --surface: #151a2e; --ink: #eef0fa; --mut: #aab0cc; --line: #283053;
+    --accent: #a79aff; --accent-ink: #120d33; --hot: #ff8aa2; --ok: #4fd69b;
+    --paper: #1b2036; --paper-ink: #e8e9f2;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 18px 40px -18px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0f1c; --surface: #151a2e; --ink: #eef0fa; --mut: #aab0cc; --line: #283053;
+  --accent: #a79aff; --accent-ink: #120d33; --hot: #ff8aa2; --ok: #4fd69b;
+  --paper: #1b2036; --paper-ink: #e8e9f2;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 18px 40px -18px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.6; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Botones */
+.btn { display: inline-flex; align-items: center; gap: 10px; font: 600 16px/1 var(--f-body); text-decoration: none; padding: 15px 24px; border-radius: 999px; border: 0; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn-light { background: #fff; color: #10142a; box-shadow: 0 10px 30px -10px rgba(20, 10, 80, .55); }
+.btn-dark { background: var(--ink); color: var(--bg); }
+.btn-ghost { background: rgba(255,255,255,.14); color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.55); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+
+/* Banda superior */
+.hero { background: var(--grad); color: #fff; margin-top: calc(-1 * env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); position: relative; overflow: hidden; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 120px; background: linear-gradient(to bottom, transparent, rgba(0,0,0,.08)); pointer-events: none; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 18px; position: relative; z-index: 1; }
+.logo { display: flex; align-items: center; gap: 10px; font: 800 21px/1 var(--f-display); letter-spacing: -0.02em; }
+.logo svg { width: 32px; height: 32px; }
+.nav-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; font-size: 14.5px; font-weight: 500; }
+.nav-links a { text-decoration: none; opacity: .92; }
+.nav-links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
+.nav-links .btn { padding: 10px 18px; font-size: 14.5px; }
+
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; padding-block: 40px 76px; position: relative; z-index: 1; }
+.hero-grid > * { min-width: 0; }
+.pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.95); color: #10142a; font-size: 13.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px; }
+.pill i { width: 8px; height: 8px; border-radius: 50%; background: #0b7a4b; display: inline-block; }
+.hero h1 { font-size: clamp(38px, 5.4vw, 66px); font-weight: 800; margin-top: 22px; text-shadow: 0 2px 18px rgba(30, 10, 90, .25); }
+.hero h1 em { font-style: normal; background: rgba(16, 20, 42, .82); padding: 0 .18em; border-radius: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.hero .lead { font-size: clamp(17px, 1.7vw, 20px); margin-top: 22px; max-width: 34em; opacity: .96; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+.facts { display: flex; gap: 10px 22px; flex-wrap: wrap; margin-top: 26px; font-size: 14.5px; font-weight: 600; }
+.facts span { display: inline-flex; align-items: center; gap: 7px; }
+.facts svg { width: 17px; height: 17px; }
+
+/* El "expediente" del hero */
+.sheet { background: var(--paper); color: var(--paper-ink); border-radius: 14px; box-shadow: 0 40px 80px -30px rgba(20, 8, 70, .6); padding: 26px 28px 22px; font-family: var(--f-doc); font-size: 16.5px; line-height: 1.85; transform: rotate(1.2deg); }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 600 12px/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mut); border-bottom: 1px dashed var(--line); padding-bottom: 12px; margin-bottom: 14px; }
+.toggle { display: inline-flex; background: var(--bg); border-radius: 999px; padding: 3px; gap: 2px; }
+.toggle button { font: 600 12px/1 var(--f-body); letter-spacing: 0; text-transform: none; border: 0; background: transparent; color: var(--mut); padding: 7px 12px; border-radius: 999px; cursor: pointer; }
+.toggle button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.d { border-radius: 4px; padding: 1px 3px; color: var(--tag-ink); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.d .t { font: 700 .76em var(--f-mono); white-space: nowrap; display: none; }
+.sheet.anon .d .o { display: none; }
+.sheet.anon .d .t { display: inline; animation: pop .4s ease; }
+.sheet:not(.anon) .d .o { animation: pop .4s ease; }
+@keyframes pop { from { opacity: 0; } to { opacity: 1; } }
+.d.p { background: var(--t-person); } .d.g { background: var(--t-org); } .d.n { background: var(--t-doc); }
+.d.m { background: var(--t-dom); } .d.f { background: var(--t-tel); } .d.x { background: var(--t-exp); }
+.sheet-foot { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); font: 500 12.5px/1.5 var(--f-body); color: var(--mut); }
+
+/* Secciones */
+section.block { padding-block: 88px; }
+.eyebrow { font: 700 12.5px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.sec-title { font-size: clamp(30px, 3.8vw, 46px); font-weight: 800; margin-top: 14px; max-width: 18em; }
+.sec-lead { color: var(--mut); font-size: 18px; margin-top: 16px; max-width: 40em; }
+
+/* Flujo con IA */
+.flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; counter-reset: paso; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.step-n { font: 800 15px/1 var(--f-display); color: var(--accent-ink); background: var(--accent); width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; }
+.step h3 { font-size: 22px; font-weight: 700; }
+.step p { color: var(--mut); font-size: 16px; }
+.chat { background: var(--bg); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.55; margin-top: auto; border: 1px solid var(--line); }
+.chat b { font-family: var(--f-mono); font-size: 12px; color: var(--mut); display: block; margin-bottom: 4px; letter-spacing: .04em; }
+.tg { font: 700 .82em var(--f-mono); background: var(--t-person); color: var(--tag-ink); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
+.tg.n { background: var(--t-doc); } .tg.m { background: var(--t-dom); }
+.ais { display: flex; flex-wrap: wrap; gap: 8px; }
+.ais span { font-size: 13px; font-weight: 600; border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; color: var(--mut); }
+
+/* Capturas */
+.shots { background: var(--surface); border-block: 1px solid var(--line); }
+.tour { display: grid; grid-template-columns: 300px 1fr; gap: 36px; margin-top: 44px; align-items: start; }
+.tour > * { min-width: 0; }
+.tabs { display: flex; flex-direction: column; gap: 8px; }
+.tab { text-align: left; background: transparent; border: 1px solid transparent; border-radius: 14px; padding: 16px 18px; cursor: pointer; color: var(--ink); font: inherit; transition: background .15s, border-color .15s; }
+.tab:hover { background: var(--bg); }
+.tab[aria-selected="true"] { background: var(--bg); border-color: var(--line); box-shadow: inset 3px 0 0 var(--accent); }
+.tab strong { display: block; font: 700 17px/1.25 var(--f-display); }
+.tab span { display: block; color: var(--mut); font-size: 14.5px; margin-top: 5px; line-height: 1.5; }
+.frame { border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--line); background: var(--bg); }
+.frame-bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.frame-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); display: inline-block; }
+.frame-bar span { margin-left: 10px; font: 500 12px/1 var(--f-mono); color: var(--mut); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.frame img { display: block; width: 100%; height: auto; }
+.cap { margin-top: 14px; color: var(--mut); font-size: 14.5px; }
+
+/* Seguridad */
+.sec-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 56px; align-items: start; }
+.sec-grid > * { min-width: 0; }
+.vault { background: var(--ink); color: var(--bg); border-radius: 20px; padding: 30px; font-family: var(--f-mono); font-size: 14px; line-height: 1.75; position: relative; overflow: hidden; }
+.vault::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--grad); }
+.vault .row { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed color-mix(in srgb, var(--bg) 22%, transparent); padding-block: 9px; flex-wrap: wrap; }
+.vault .row:last-child { border-bottom: 0; }
+.vault .k { opacity: .7; }
+.vault .v { font-weight: 700; }
+.vault .v.ok::before { content: "● "; color: #4fd69b; }
+.vault .v.no::before { content: "✕ "; color: #ff8aa2; }
+.vault-title { font: 700 13px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; opacity: .7; margin-bottom: 10px; }
+.guarantees { display: grid; gap: 22px; margin-top: 30px; }
+.g { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+.g-ico { width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); display: grid; place-items: center; }
+.g-ico svg { width: 22px; height: 22px; }
+.g h3 { font-size: 19px; font-weight: 700; }
+.g p { color: var(--mut); font-size: 16px; margin-top: 4px; }
+
+/* Qué detecta */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.chip { display: inline-flex; align-items: center; gap: 9px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 8px 15px 8px 9px; font-size: 15px; font-weight: 500; }
+.chip code { font: 700 11.5px/1 var(--f-mono); background: var(--c, var(--t-exp)); color: var(--tag-ink); padding: 5px 7px; border-radius: 6px; }
+
+/* Descarga */
+.dl { background: var(--grad); color: #fff; border-radius: 28px; padding: 56px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; position: relative; overflow: hidden; }
+.dl > * { min-width: 0; position: relative; }
+.dl .free { margin: 0; opacity: 1; font: 800 clamp(64px, 9vw, 120px)/0.9 var(--f-display); letter-spacing: -0.05em; }
+.free small { display: block; font: 700 15px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; margin-top: 14px; opacity: .92; }
+.dl h2 { font-size: clamp(28px, 3.2vw, 40px); font-weight: 800; }
+.dl p { margin-top: 14px; font-size: 17px; opacity: .96; }
+.how { background: rgba(255,255,255,.96); color: #10142a; border-radius: 18px; padding: 26px 28px; }
+.how h3 { font-size: 19px; font-weight: 700; margin-bottom: 12px; }
+.how ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; font-size: 15.5px; }
+.how .note { margin-top: 14px; font-size: 13.5px; color: #4b5170; border-top: 1px solid #e2e4f0; padding-top: 12px; }
+.dl-note { font-size: 14px !important; opacity: .9 !important; }
+
+/* Advertencias */
+.honest { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+.honest div { border-top: 2px solid var(--ink); padding-top: 16px; min-width: 0; }
+.honest h3 { font-size: 18px; font-weight: 700; }
+.honest p { color: var(--mut); font-size: 15.5px; margin-top: 6px; }
+
+/* Pie */
+footer { border-top: 1px solid var(--line); padding-block: 36px 44px; }
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 15px; color: var(--mut); }
+.foot strong { color: var(--ink); }
+.ig { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; font-weight: 600; color: var(--ink); border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 999px; }
+.ig svg { width: 18px; height: 18px; }
+.ig:hover { border-color: var(--accent); }
+
+@media (max-width: 920px) {
+  .hero-grid, .sec-grid, .dl, .tour { grid-template-columns: 1fr; }
+  .flow, .honest { grid-template-columns: 1fr; }
+  .sheet { transform: none; }
+  .tabs { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+  .tab { flex: 0 0 220px; }
+  .dl { padding: 36px 24px; border-radius: 22px; }
+  section.block { padding-block: 64px; }
+  .nav-links a:not(.btn) { display: none; }
+}
+@media (max-width: 480px) {
+  .sheet { padding: 20px 18px; font-size: 15.5px; }
+  .cta-row .btn { width: 100%; justify-content: center; }
+  .vault { padding: 22px 18px; font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <nav class="nav" aria-label="Principal">
+      <div class="logo">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#fff" fill-opacity=".18"/><path d="M18 10h20l10 10v34H18z" fill="#fff"/><path d="M38 10v10h10z" fill="#d9d6ff"/><rect x="23" y="26" width="20" height="5" rx="1.5" fill="#0b1220"/><rect x="23" y="35" width="14" height="5" rx="1.5" fill="#0b1220"/><rect x="23" y="44" width="18" height="3" rx="1.5" fill="#b9c0cc"/></svg>
+        Anonimizador
+      </div>
+      <div class="nav-links">
+        <a href="#ia">Cómo se usa con IA</a>
+        <a href="#capturas">Capturas</a>
+        <a href="#seguridad">Seguridad</a>
+        <a class="btn btn-light js-download" href="#descargar">Descargar gratis</a>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <div>
+        <span class="pill"><i></i> Funciona sin internet · nada sale de tu computadora</span>
+        <h1>Aprovechá la IA con tus expedientes <em>sin exponer datos sensibles</em></h1>
+        <p class="lead">El Anonimizador reemplaza nombres, DNI, domicilios y expedientes por etiquetas antes de que el texto llegue a ChatGPT, Claude o Gemini. Cuando la IA responde, recuperás los datos reales con un clic.</p>
+        <div class="cta-row">
+          <a class="btn btn-light js-download" href="#descargar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+            Descargar gratis
+          </a>
+          <a class="btn btn-ghost" href="#capturas">Ver cómo funciona</a>
+        </div>
+        <div class="facts">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>100% gratis</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin instalar nada</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin cuenta ni registro</span>
+        </div>
+      </div>
+
+      <div class="sheet" id="sheet" aria-label="Ejemplo de texto antes y después de anonimizar">
+        <div class="sheet-head">
+          <span>Demanda · ejemplo ficticio</span>
+          <span class="toggle" role="group" aria-label="Ver texto">
+            <button type="button" id="v-orig" aria-pressed="true">Original</button>
+            <button type="button" id="v-anon" aria-pressed="false">Anonimizado</button>
+          </span>
+        </div>
+        <p>Expte. N° <span class="d x"><span class="o">GXP 45123/23</span><span class="t">[EXPEDIENTE 1]</span></span> — <span class="d p"><span class="o">Juan Carlos Pérez</span><span class="t">[PERSONA 1]</span></span>, DNI N° <span class="d n"><span class="o">28.456.789</span><span class="t">[DNI 1]</span></span>, con domicilio real en <span class="d m"><span class="o">calle Junín 1456</span><span class="t">[DOMICILIO 1]</span></span>, teléfono <span class="d f"><span class="o">(0379) 4431256</span><span class="t">[TELÉFONO 1]</span></span>, promueve demanda contra <span class="d g"><span class="o">Transportes El Rápido S.R.L.</span><span class="t">[ORGANIZACIÓN 1]</span></span> y contra <span class="d p"><span class="o">Ramón A. Skrzypczak</span><span class="t">[PERSONA 2]</span></span>…</p>
+        <div class="sheet-foot">El texto jurídico queda intacto. Solo cambian los datos que identifican a las personas.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="block" id="ia">
+    <div class="wrap">
+      <p class="eyebrow">Cómo se usa con IA</p>
+      <h2 class="sec-title">La IA trabaja con el caso, pero no ve a las personas</h2>
+      <p class="sec-lead">Pedile a la IA que resuma, analice o redacte con el texto anonimizado. Ella responde usando las mismas etiquetas, y vos las convertís de nuevo en los datos reales.</p>
+
+      <div class="flow">
+        <article class="step">
+          <span class="step-n">1</span>
+          <h3>Anonimizás en tu computadora</h3>
+          <p>Cargás el Word, el PDF o pegás el texto. Revisás lo que se detectó y guardás la clave para revertir.</p>
+          <div class="chat"><b>TEXTO ANONIMIZADO</b><span class="tg">[PERSONA 1]</span>, DNI <span class="tg n">[DNI 1]</span>, domiciliado en <span class="tg m">[DOMICILIO 1]</span>…</div>
+        </article>
+        <article class="step">
+          <span class="step-n">2</span>
+          <h3>Lo usás con la IA que quieras</h3>
+          <p>Copiás el texto con etiquetas y le pedís lo que necesites. La IA nunca recibe un nombre ni un número real.</p>
+          <div class="ais"><span>ChatGPT</span><span>Claude</span><span>Gemini</span><span>Copilot</span></div>
+          <div class="chat"><b>RESPUESTA DE LA IA</b>Corresponde notificar a <span class="tg">[PERSONA 1]</span> en <span class="tg m">[DOMICILIO 1]</span> antes de…</div>
+        </article>
+        <article class="step">
+          <span class="step-n">3</span>
+          <h3>Revertís con tu clave</h3>
+          <p>Pegás la respuesta en "Revertir", cargás tu clave y los datos reales vuelven a su lugar. También funciona con el Word anonimizado.</p>
+          <div class="chat"><b>RESULTADO</b>Corresponde notificar a Juan Carlos Pérez en calle Junín 1456 antes de…</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block shots" id="capturas">
+    <div class="wrap">
+      <p class="eyebrow">Capturas de la aplicación</p>
+      <h2 class="sec-title">Así funciona, paso a paso</h2>
+      <p class="sec-lead">Todas las capturas usan una demanda con datos ficticios.</p>
+
+      <div class="tour">
+        <div class="tabs" role="tablist" aria-label="Capturas">
+          <button class="tab" role="tab" id="t0" aria-selected="true" aria-controls="shot" data-i="0"><strong>Cargá el documento</strong><span>Arrastrá un Word, PDF o .txt, o pegá el texto directamente.</span></button>
+          <button class="tab" role="tab" id="t1" aria-selected="false" aria-controls="shot" data-i="1"><strong>Revisá lo detectado</strong><span>Cada dato aparece resaltado con un color según su tipo, con el resumen por categoría al costado.</span></button>
+          <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="shot" data-i="2"><strong>Corregí con un clic</strong><span>Tocá un dato para dejarlo visible o cambiarle la categoría. Seleccioná cualquier texto para agregarlo.</span></button>
+          <button class="tab" role="tab" id="t3" aria-selected="false" aria-controls="shot" data-i="3"><strong>Mirá el resultado</strong><span>La vista previa muestra el texto con las etiquetas, listo para copiar o descargar en Word.</span></button>
+          <button class="tab" role="tab" id="t4" aria-selected="false" aria-controls="shot" data-i="4"><strong>Modo oscuro</strong><span>Para trabajar cómodo de noche con documentos largos.</span></button>
+        </div>
+        <div role="tabpanel" id="shot" aria-labelledby="t0">
+          <div class="frame">
+            <div class="frame-bar"><i></i><i></i><i></i><span>Anonimizador.html · abierto sin conexión</span></div>
+            <img id="shot-img" src="img/01-inicio.jpg" alt="Pantalla de inicio del Anonimizador con una demanda pegada">
+          </div>
+          <p class="cap" id="shot-cap">Pantalla de inicio: elegís un archivo o pegás el texto, y tocás "Anonimizar".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="seguridad">
+    <div class="wrap sec-grid">
+      <div>
+        <p class="eyebrow">Seguridad</p>
+        <h2 class="sec-title">Tus documentos no salen de tu computadora</h2>
+        <p class="sec-lead">El Anonimizador es un único archivo que se abre en el navegador. Todo el procesamiento ocurre en tu equipo.</p>
+        <div class="guarantees">
+          <div class="g">
+            <span class="g-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l20 20M8.5 16.5a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2-1.4M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 11 5M12 20h.01"/></svg></span>
+            <div><h3>Conexiones a internet bloqueadas</h3><p>La aplicación tiene bloqueado por diseño cualquier envío de datos a la red. Podés desconectar el wifi y funciona igual.</p></div>
+          </div>
+          <div class="g">
+            <span class="g-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+            <div><h3>La clave queda en tus manos</h3><p>La relación entre etiquetas y datos reales se guarda en un archivo que solo vos tenés. Podés protegerlo con contraseña.</p></div>
+          </div>
+          <div class="g">
+            <span class="g-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M3 3l18 18"/></svg></span>
+            <div><h3>Sin cuentas, sin servidores</h3><p>No hay registro, no hay usuario y no hay base de datos. No existe ningún lugar remoto donde tus documentos puedan quedar guardados.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="vault" aria-label="Resumen de lo que pasa con tus datos">
+        <p class="vault-title">Dónde están tus datos</p>
+        <div class="row"><span class="k">Documento original</span><span class="v ok">en tu computadora</span></div>
+        <div class="row"><span class="k">Procesamiento</span><span class="v ok">en tu navegador</span></div>
+        <div class="row"><span class="k">Clave para revertir</span><span class="v ok">archivo tuyo</span></div>
+        <div class="row"><span class="k">Envíos a internet</span><span class="v no">ninguno</span></div>
+        <div class="row"><span class="k">Lo que ve la IA</span><span class="v ok">solo etiquetas</span></div>
+        <div class="row"><span class="k">Instalación</span><span class="v no">no hace falta</span></div>
+        <div class="row"><span class="k">Costo</span><span class="v ok">$ 0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" style="padding-top: 0">
+    <div class="wrap">
+      <p class="eyebrow">Qué detecta</p>
+      <h2 class="sec-title">Pensado para escritos y sentencias argentinas</h2>
+      <p class="sec-lead">Reconoce los formatos que aparecen en un expediente real: DNI con puntos, CUIT con guiones, dominios viejos y nuevos, matrículas, tomos y folios.</p>
+      <div class="chips">
+        <span class="chip" style="--c: var(--t-person)"><code>PERSONA</code>Personas</span>
+        <span class="chip" style="--c: var(--t-org)"><code>ORGANIZACIÓN</code>Empresas y organizaciones</span>
+        <span class="chip" style="--c: var(--t-doc)"><code>DNI</code>DNI y documentos</span>
+        <span class="chip" style="--c: var(--t-doc)"><code>CUIT</code>CUIT / CUIL</span>
+        <span class="chip" style="--c: var(--t-dom)"><code>DOMICILIO</code>Domicilios</span>
+        <span class="chip" style="--c: var(--t-tel)"><code>TELÉFONO</code>Teléfonos</span>
+        <span class="chip" style="--c: var(--t-tel)"><code>EMAIL</code>Correos electrónicos</span>
+        <span class="chip" style="--c: #c5efea"><code>CBU</code>CBU, alias y cuentas</span>
+        <span class="chip" style="--c: var(--t-exp)"><code>PATENTE</code>Patentes</span>
+        <span class="chip" style="--c: var(--t-exp)"><code>MATRÍCULA</code>Matrículas, tomos y folios</span>
+        <span class="chip" style="--c: var(--t-exp)"><code>EXPEDIENTE</code>Números de expediente</span>
+        <span class="chip" style="--c: #f8d6c8"><code>NACIMIENTO</code>Fechas de nacimiento</span>
+        <span class="chip" style="--c: var(--t-exp)"><code>INMUEBLE</code>Datos catastrales</span>
+        <span class="chip" style="--c: #d5dcf6"><code>ORGANISMO</code>Juzgados y comisarías</span>
+        <span class="chip" style="--c: #d2ecbb"><code>LUGAR</code>Localidades</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="descargar" style="padding-top: 0">
+    <div class="wrap">
+      <div class="dl">
+        <div>
+          <p class="free">Gratis.<small>Sin suscripción · sin límite de documentos</small></p>
+          <h2 style="margin-top: 28px">Descargalo y empezá a usar la IA con tranquilidad</h2>
+          <p>Es un solo archivo. Funciona en Windows y Mac con Chrome o Edge, y lo podés compartir con tu equipo.</p>
+          <div class="cta-row">
+            <a class="btn btn-light js-download" href="#descargar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
+              Descargar Anonimizador
+            </a>
+          </div>
+          <p class="dl-note">Archivo: Anonimizador.html · 1,9 MB</p>
+        </div>
+        <div class="how">
+          <h3>Cómo se usa</h3>
+          <ol>
+            <li>Hacé doble clic en "Anonimizador.html". Se abre en el navegador.</li>
+            <li>Arrastrá un Word (.docx), un PDF o un .txt, o pegá el texto.</li>
+            <li>Tocá "Anonimizar" y revisá lo resaltado.</li>
+            <li>Descargá el Word o copiá el texto anonimizado.</li>
+            <li>Guardá la clave si después querés recuperar los datos.</li>
+          </ol>
+          <p class="note">La clave contiene los datos originales. Guardala aparte y nunca la mandes junto con el documento anonimizado.</p>
+        </div>
+      </div>
+
+      <div class="honest">
+        <div><h3>Revisá siempre el resultado</h3><p>Ninguna detección automática es infalible. Por eso la aplicación resalta todo y te deja corregir antes de descargar.</p></div>
+        <div><h3>PDF escaneados</h3><p>Si el PDF es una imagen escaneada no se puede leer el texto. En ese caso usá el Word original.</p></div>
+        <div><h3>Archivos .doc antiguos</h3><p>Guardalos antes como .docx desde Word y después cargalos en el Anonimizador.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p>Desarrollado por <strong>Darío Saul Navarro</strong></p>
+    <a class="ig" href="https://www.instagram.com/darionavarro.ia/" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>
+      @darionavarro.ia
+    </a>
+  </div>
+</footer>
+
+<script>
+// Enlace de descarga. Cuando esté, poné acá la dirección pública del archivo.
+const DESCARGA = "Anonimizador.html";
+if (DESCARGA) document.querySelectorAll('.js-download').forEach(a => { a.href = DESCARGA; a.setAttribute('download', 'Anonimizador.html'); });
+
+// Hoja del hero: original ↔ anonimizado
+const sheet = document.getElementById('sheet');
+const bO = document.getElementById('v-orig'), bA = document.getElementById('v-anon');
+let auto = true;
+function show(anon) { sheet.classList.toggle('anon', anon); bO.setAttribute('aria-pressed', String(!anon)); bA.setAttribute('aria-pressed', String(anon)); }
+bO.onclick = () => { auto = false; show(false); };
+bA.onclick = () => { auto = false; show(true); };
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reduce) setInterval(() => { if (auto) show(!sheet.classList.contains('anon')); }, 2800);
+
+// Recorrido de capturas
+const shots = [
+  ['img/01-inicio.jpg', 'Pantalla de inicio del Anonimizador con una demanda pegada', 'Pantalla de inicio: elegís un archivo o pegás el texto, y tocás "Anonimizar".'],
+  ['img/02-revisar.jpg', 'Demanda con los datos sensibles resaltados por color y panel de categorías', 'Revisión: 23 datos distintos detectados en la demanda, agrupados por categoría.'],
+  ['img/03-dato.jpg', 'Menú de un dato resaltado con opciones para no anonimizarlo o reclasificarlo', 'Tocás un dato y elegís si dejarlo visible o en qué categoría va.'],
+  ['img/05-vista-previa.jpg', 'Vista previa del texto con etiquetas como [PERSONA 1] y [DNI 1]', 'Vista previa: así llega el texto a la IA, con etiquetas en lugar de datos.'],
+  ['img/06-oscuro.jpg', 'Vista previa del texto anonimizado en modo oscuro', 'El mismo trabajo en modo oscuro.'],
+];
+const tabs = [...document.querySelectorAll('.tab')];
+const img = document.getElementById('shot-img'), cap = document.getElementById('shot-cap'), panel = document.getElementById('shot');
+function pick(i) {
+  tabs.forEach((t, j) => t.setAttribute('aria-selected', String(i === j)));
+  img.src = shots[i][0]; img.alt = shots[i][1]; cap.textContent = shots[i][2];
+  panel.setAttribute('aria-labelledby', 't' + i);
+}
+tabs.forEach((t, i) => t.addEventListener('click', () => pick(i)));
+shots.forEach(s => { const p = new Image(); p.src = s[0]; });
+</script>
+
+</body>
+</html>

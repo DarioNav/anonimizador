@@ -1,0 +1,29 @@
+ANONIMIZADOR DE DOCUMENTOS JUDICIALES
+=====================================
+
+CÓMO SE USA
+1. Hacé doble clic en "Anonimizador.html". Se abre en el navegador
+   (Chrome o Edge). No hay que instalar nada.
+2. Arrastrá un Word (.docx), un PDF o un .txt, o pegá el texto.
+3. Tocá "Anonimizar" y revisá el resultado:
+   - Tocá un dato resaltado para dejarlo visible.
+   - Seleccioná cualquier texto para agregarlo.
+   - "Mostrar sospechosos" subraya lo que podría ser un dato sin detectar.
+4. Descargá el Word o el texto anonimizado.
+5. Si después vas a querer recuperar los datos originales, tocá
+   "Guardar clave para revertir" y guardá ese archivo aparte.
+
+PRIVACIDAD
+La aplicación funciona sin internet y no envía nada a ningún lado:
+el documento nunca sale de tu computadora.
+
+IMPORTANTE
+- Revisá siempre el resultado antes de compartirlo. Ninguna detección
+  automática es infalible.
+- La clave (.clave.json) contiene los datos originales. No la mandes
+  junto con el documento anonimizado.
+- Los PDF escaneados (imágenes) no se pueden leer: usá el Word original.
+- Los .doc antiguos hay que guardarlos antes como .docx.
+
+PARA COMPARTIR LA APLICACIÓN
+Alcanza con enviar esta carpeta, o solo el archivo "Anonimizador.html".
