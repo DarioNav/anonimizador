@@ -198,6 +198,15 @@ footer { border-top: 1px solid var(--line); padding-block: 36px 44px; }
 .ig svg { width: 18px; height: 18px; }
 .ig:hover { border-color: var(--accent); }
 
+/* Aviso para celular */
+.mobile-note { display: none; align-items: center; gap: 12px; flex-wrap: wrap; background: rgba(255,255,255,.96); color: #10142a; border-radius: 16px; padding: 14px 16px; margin-top: 20px; font-size: 14.5px; line-height: 1.45; box-shadow: 0 10px 30px -14px rgba(20, 10, 80, .5); }
+.mobile-note svg { width: 26px; height: 26px; flex: none; color: #5b3df5; }
+.mobile-note p { flex: 1 1 200px; min-width: 0; margin: 0; }
+.mobile-note p b { display: block; font-size: 15px; }
+.mobile-note .url { font: 600 13px/1.4 var(--f-mono); color: #5b3df5; user-select: all; overflow-wrap: anywhere; }
+.mobile-note button { font: 600 14px/1 var(--f-body); background: #10142a; color: #fff; border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; flex: none; }
+@media (max-width: 820px), (pointer: coarse) and (max-width: 1100px) { .mobile-note { display: flex; } }
+
 @media (max-width: 920px) {
   .hero-grid, .sec-grid, .dl, .tour { grid-template-columns: 1fr; }
   .flow, .honest { grid-template-columns: 1fr; }
@@ -251,6 +260,11 @@ footer { border-top: 1px solid var(--line); padding-block: 36px 44px; }
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>100% gratis</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin instalar nada</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin cuenta ni registro</span>
+        </div>
+        <div class="mobile-note" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+          <p><b>¿Estás en el celular?</b>El Anonimizador se usa en la computadora, con Chrome o Edge. Abrí este link desde tu compu para descargarlo: <span class="url">darionav.github.io/anonimizador</span></p>
+          <button type="button" class="js-copy">Copiar link</button>
         </div>
       </div>
 
@@ -398,6 +412,11 @@ footer { border-top: 1px solid var(--line); padding-block: 36px 44px; }
             </a>
           </div>
           <p class="dl-note">Archivo: Anonimizador.html · 1,9 MB</p>
+        <div class="mobile-note" role="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+          <p><b>¿Estás en el celular?</b>El Anonimizador se usa en la computadora, con Chrome o Edge. Abrí este link desde tu compu para descargarlo: <span class="url">darionav.github.io/anonimizador</span></p>
+          <button type="button" class="js-copy">Copiar link</button>
+        </div>
         </div>
         <div class="how">
           <h3>Cómo se usa</h3>
@@ -463,6 +482,13 @@ function pick(i) {
 }
 tabs.forEach((t, i) => t.addEventListener('click', () => pick(i)));
 shots.forEach(s => { const p = new Image(); p.src = s[0]; });
+// Aviso para celular: copiar el link para abrirlo en la compu
+const SITIO = "https://darionav.github.io/anonimizador/";
+document.querySelectorAll('.js-copy').forEach(b => b.addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(SITIO); b.textContent = '¡Link copiado!'; }
+  catch { const u = b.parentElement.querySelector('.url'); const r = document.createRange(); r.selectNodeContents(u); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Copialo de arriba'; }
+  setTimeout(() => { b.textContent = 'Copiar link'; }, 2500);
+}));
 </script>
 
 </body>
