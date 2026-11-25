@@ -220,6 +220,23 @@ footer { border-top: 1px solid var(--line); padding-block: 36px 44px; }
 .btn-dl small { font: 600 11px/1 var(--f-mono); background: #5b3df5; color: #fff; padding: 4px 7px; border-radius: 999px; letter-spacing: .04em; }
 section[id] { scroll-margin-top: 84px; }
 
+/* Créditos */
+.credit { display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 26px; background: rgba(16, 20, 42, .28); border: 1px solid rgba(255,255,255,.28); border-radius: 16px; padding: 10px 14px 10px 10px; font-size: 14.5px; color: #fff; max-width: 100%; }
+.credit .av { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #5b3df5; display: grid; place-items: center; font: 800 15px/1 var(--f-display); flex: none; }
+.credit span { min-width: 0; }
+.credit b { display: block; font-size: 15.5px; }
+.credit a { display: inline-flex; align-items: center; gap: 6px; color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.credit a svg { width: 16px; height: 16px; }
+.dl .credit { margin-top: 22px; font-size: 14.5px; opacity: 1; }
+.dl .mobile-note p { font-size: 14.5px; margin-top: 0; opacity: 1; }
+.author { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px 28px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: space-between; }
+.author-id { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.author .av { width: 56px; height: 56px; border-radius: 50%; background: var(--grad); color: #fff; display: grid; place-items: center; font: 800 20px/1 var(--f-display); flex: none; }
+.author p { color: var(--mut); font-size: 15px; }
+.author h3 { font-size: 21px; font-weight: 700; color: var(--ink); }
+.ig-big { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: #fff; background: var(--grad); padding: 13px 20px; border-radius: 999px; box-shadow: 0 10px 26px -12px rgba(90, 40, 200, .7); }
+.ig-big svg { width: 20px; height: 20px; }
+
 @media (max-width: 920px) {
   .hero-grid, .sec-grid, .dl, .tour { grid-template-columns: 1fr; }
   .flow, .honest { grid-template-columns: 1fr; }
@@ -287,6 +304,7 @@ section[id] { scroll-margin-top: 84px; }
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin instalar nada</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin cuenta ni registro</span>
         </div>
+        <p class="credit"><span class="av" aria-hidden="true">DN</span><span>Desarrollado por <b>Darío Saul Navarro</b><a href="https://www.instagram.com/darionavarro.ia/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>@darionavarro.ia</a></span></p>
         <div class="mobile-note" role="note">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
           <p><b>¿Estás en el celular?</b>El Anonimizador se usa en la computadora, con Chrome o Edge. Abrí este link desde tu compu para descargarlo: <span class="url">darionav.github.io/anonimizador</span></p>
@@ -438,6 +456,7 @@ section[id] { scroll-margin-top: 84px; }
             </a>
           </div>
           <p class="dl-note">Archivo: Anonimizador.html · 1,9 MB</p>
+        <p class="credit"><span class="av" aria-hidden="true">DN</span><span>Desarrollado por <b>Darío Saul Navarro</b><a href="https://www.instagram.com/darionavarro.ia/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>@darionavarro.ia</a></span></p>
         <div class="mobile-note" role="note">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
           <p><b>¿Estás en el celular?</b>El Anonimizador se usa en la computadora, con Chrome o Edge. Abrí este link desde tu compu para descargarlo: <span class="url">darionav.github.io/anonimizador</span></p>
@@ -467,12 +486,18 @@ section[id] { scroll-margin-top: 84px; }
 </main>
 
 <footer>
-  <div class="wrap foot">
-    <p>Desarrollado por <strong>Darío Saul Navarro</strong></p>
-    <a class="ig" href="https://www.instagram.com/darionavarro.ia/" target="_blank" rel="noopener noreferrer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>
-      @darionavarro.ia
-    </a>
+  <div class="wrap">
+    <div class="author">
+      <div class="author-id">
+        <span class="av" aria-hidden="true">DN</span>
+        <div>
+          <p>Desarrollado por</p>
+          <h3>Darío Saul Navarro</h3>
+          <p>Seguime en Instagram para más contenido sobre IA.</p>
+        </div>
+      </div>
+      <a class="ig-big" href="https://www.instagram.com/darionavarro.ia/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>@darionavarro.ia</a>
+    </div>
   </div>
 </footer>
 
