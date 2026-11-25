@@ -240,6 +240,19 @@ section[id] { scroll-margin-top: 84px; }
 .ig-big { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: #fff; background: var(--grad); padding: 13px 20px; border-radius: 999px; box-shadow: 0 10px 26px -12px rgba(90, 40, 200, .7); }
 .ig-big svg { width: 20px; height: 20px; }
 
+/* Inicio con descarga */
+.hero .free { font: 800 clamp(58px, 8vw, 108px)/0.9 var(--f-display); letter-spacing: -0.05em; margin-top: 24px; }
+.hero .free small { display: block; font: 700 14px/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; margin-top: 12px; opacity: .92; }
+.hero h1 { font-size: clamp(34px, 4.3vw, 54px); }
+.hero .dl-note { font-size: 14px; margin-top: 12px; opacity: .9; }
+.hero-grid { align-items: start; }
+.hero .how { margin-top: 24px; box-shadow: 0 40px 80px -30px rgba(20, 8, 70, .6); }
+.hero .how ol { gap: 11px; }
+.hero .how li::marker { font-weight: 800; color: #5b3df5; }
+.hero .how .note + .note { border-top: 0; padding-top: 0; margin-top: 8px; }
+.sheet-wrap { margin-top: 36px; max-width: 780px; }
+.sheet-wrap .sheet { transform: none; box-shadow: var(--shadow); border: 1px solid var(--line); }
+
 @media (max-width: 920px) {
   .hero-grid, .sec-grid, .dl, .tour { grid-template-columns: 1fr; }
   .flow, .honest { grid-template-columns: 1fr; }
@@ -291,21 +304,23 @@ section[id] { scroll-margin-top: 84px; }
   </div>
 </div>
 
-<header class="hero">
+<header class="hero" id="descargar">
   <div class="wrap">
 
     <div class="hero-grid">
       <div>
         <span class="pill"><i></i> Funciona sin internet · nada sale de tu computadora</span>
-        <h1>Aprovechá la IA con tus expedientes <em>sin exponer datos sensibles</em></h1>
+        <p class="free">Gratis.<small>Sin suscripción · sin límite de documentos</small></p>
+        <h1>Descargalo y empezá a usar la IA con tranquilidad, <em>sin exponer datos sensibles</em></h1>
         <p class="lead">El Anonimizador reemplaza nombres, DNI, domicilios y expedientes por etiquetas antes de que el texto llegue a ChatGPT, Claude o Gemini. Cuando la IA responde, recuperás los datos reales con un clic.</p>
         <div class="cta-row">
           <a class="btn btn-light js-download" href="#descargar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
             Descargar gratis
           </a>
-          <a class="btn btn-ghost" href="#capturas">Ver cómo funciona</a>
+          <a class="btn btn-ghost" href="#paso-a-paso">Ver el paso a paso</a>
         </div>
+        <p class="dl-note">Archivo: Anonimizador.html · 1,9 MB · Windows o Mac, con Chrome o Edge</p>
         <div class="facts">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>100% gratis</span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Sin instalar nada</span>
@@ -319,16 +334,19 @@ section[id] { scroll-margin-top: 84px; }
         </div>
       </div>
 
-      <div class="sheet" id="sheet" aria-label="Ejemplo de texto antes y después de anonimizar">
-        <div class="sheet-head">
-          <span>Demanda · ejemplo ficticio</span>
-          <span class="toggle" role="group" aria-label="Ver texto">
-            <button type="button" id="v-orig" aria-pressed="true">Original</button>
-            <button type="button" id="v-anon" aria-pressed="false">Anonimizado</button>
-          </span>
-        </div>
-        <p>Expte. N° <span class="d x"><span class="o">GXP 45123/23</span><span class="t">[EXPEDIENTE 1]</span></span> — <span class="d p"><span class="o">Juan Carlos Pérez</span><span class="t">[PERSONA 1]</span></span>, DNI N° <span class="d n"><span class="o">28.456.789</span><span class="t">[DNI 1]</span></span>, con domicilio real en <span class="d m"><span class="o">calle Junín 1456</span><span class="t">[DOMICILIO 1]</span></span>, teléfono <span class="d f"><span class="o">(0379) 4431256</span><span class="t">[TELÉFONO 1]</span></span>, promueve demanda contra <span class="d og"><span class="o">Transportes El Rápido S.R.L.</span><span class="t">[ORGANIZACIÓN 1]</span></span> y contra <span class="d p"><span class="o">Ramón A. Skrzypczak</span><span class="t">[PERSONA 2]</span></span>…</p>
-        <div class="sheet-foot">El texto jurídico queda intacto. Solo cambian los datos que identifican a las personas.</div>
+      <div class="how" id="paso-a-paso">
+        <h3>Cómo se usa, paso a paso</h3>
+        <ol>
+          <li><b>Desde tu computadora</b>, tocá el botón <b>"Descargar gratis"</b>. En el celular no funciona.</li>
+          <li>Abrí la carpeta <b>Descargas</b> de tu computadora. También lo ves arriba a la derecha del navegador, en el ícono de descargas.</li>
+          <li>Hacé <b>doble clic</b> en <b>"Anonimizador.html"</b>. Se abre en tu navegador. No hay que instalar nada.</li>
+          <li><b>Arrastrá</b> tu Word, PDF o .txt adentro, o <b>pegá</b> el texto.</li>
+          <li>Tocá <b>"Anonimizar"</b> y revisá lo que quedó resaltado en colores.</li>
+          <li>Tocá <b>"Copiar texto anonimizado"</b> y pegalo en ChatGPT, Claude o Gemini.</li>
+          <li>Si después querés recuperar los datos reales, tocá <b>"Guardar clave para revertir"</b> y guardá ese archivo.</li>
+        </ol>
+        <p class="note"><b>¿Se abrió con otro programa?</b> Hacé clic derecho en el archivo → "Abrir con" → Chrome o Edge.</p>
+        <p class="note">La clave contiene los datos originales. Guardala aparte y nunca la mandes junto con el documento anonimizado.</p>
       </div>
     </div>
   </div>
@@ -340,6 +358,19 @@ section[id] { scroll-margin-top: 84px; }
       <p class="eyebrow">Cómo se usa con IA</p>
       <h2 class="sec-title">La IA trabaja con el caso, pero no ve a las personas</h2>
       <p class="sec-lead">Pedile a la IA que resuma, analice o redacte con el texto anonimizado. Ella responde usando las mismas etiquetas, y vos las convertís de nuevo en los datos reales.</p>
+      <div class="sheet-wrap">
+        <div class="sheet" id="sheet" aria-label="Ejemplo de texto antes y después de anonimizar">
+          <div class="sheet-head">
+            <span>Demanda · ejemplo ficticio</span>
+            <span class="toggle" role="group" aria-label="Ver texto">
+              <button type="button" id="v-orig" aria-pressed="true">Original</button>
+              <button type="button" id="v-anon" aria-pressed="false">Anonimizado</button>
+            </span>
+          </div>
+          <p>Expte. N° <span class="d x"><span class="o">GXP 45123/23</span><span class="t">[EXPEDIENTE 1]</span></span> — <span class="d p"><span class="o">Juan Carlos Pérez</span><span class="t">[PERSONA 1]</span></span>, DNI N° <span class="d n"><span class="o">28.456.789</span><span class="t">[DNI 1]</span></span>, con domicilio real en <span class="d m"><span class="o">calle Junín 1456</span><span class="t">[DOMICILIO 1]</span></span>, teléfono <span class="d f"><span class="o">(0379) 4431256</span><span class="t">[TELÉFONO 1]</span></span>, promueve demanda contra <span class="d og"><span class="o">Transportes El Rápido S.R.L.</span><span class="t">[ORGANIZACIÓN 1]</span></span> y contra <span class="d p"><span class="o">Ramón A. Skrzypczak</span><span class="t">[PERSONA 2]</span></span>…</p>
+          <div class="sheet-foot">El texto jurídico queda intacto. Solo cambian los datos que identifican a las personas.</div>
+        </div>
+      </div>
 
       <div class="flow">
         <article class="step">
@@ -449,41 +480,10 @@ section[id] { scroll-margin-top: 84px; }
     </div>
   </section>
 
-  <section class="block" id="descargar" style="padding-top: 0">
+  <section class="block" style="padding-top: 0">
     <div class="wrap">
-      <div class="dl">
-        <div>
-          <p class="free">Gratis.<small>Sin suscripción · sin límite de documentos</small></p>
-          <h2 style="margin-top: 28px">Descargalo y empezá a usar la IA con tranquilidad</h2>
-          <p>Es un solo archivo. Funciona en Windows y Mac con Chrome o Edge, y lo podés compartir con tu equipo.</p>
-          <div class="cta-row">
-            <a class="btn btn-light js-download" href="#descargar">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>
-              Descargar Anonimizador
-            </a>
-          </div>
-          <p class="dl-note">Archivo: Anonimizador.html · 1,9 MB</p>
-        <p class="credit"><span class="av" aria-hidden="true">DN</span><span>Desarrollado por <b>Darío Saul Navarro</b><a href="https://www.instagram.com/darionavarro.ia/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>@darionavarro.ia</a></span></p>
-        <div class="mobile-note" role="note">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
-          <p><b>¿Estás en el celular?</b>El Anonimizador se usa en la computadora, con Chrome o Edge. Abrí este link desde tu compu para descargarlo: <span class="url">darionav.github.io/anonimizador</span></p>
-          <button type="button" class="js-copy">Copiar link</button>
-        </div>
-        </div>
-        <div class="how">
-          <h3>Cómo se usa</h3>
-          <ol>
-            <li>Hacé doble clic en "Anonimizador.html". Se abre en el navegador.</li>
-            <li>Arrastrá un Word (.docx), un PDF o un .txt, o pegá el texto.</li>
-            <li>Tocá "Anonimizar" y revisá lo resaltado.</li>
-            <li>Descargá el Word o copiá el texto anonimizado.</li>
-            <li>Guardá la clave si después querés recuperar los datos.</li>
-          </ol>
-          <p class="note">La clave contiene los datos originales. Guardala aparte y nunca la mandes junto con el documento anonimizado.</p>
-        </div>
-      </div>
-
-      <div class="honest">
+      <p class="eyebrow">Antes de usarlo</p>
+      <div class="honest" style="margin-top: 18px">
         <div><h3>Revisá siempre el resultado</h3><p>Ninguna detección automática es infalible. Por eso la aplicación resalta todo y te deja corregir antes de descargar.</p></div>
         <div><h3>PDF escaneados</h3><p>Si el PDF es una imagen escaneada no se puede leer el texto. En ese caso usá el Word original.</p></div>
         <div><h3>Archivos .doc antiguos</h3><p>Guardalos antes como .docx desde Word y después cargalos en el Anonimizador.</p></div>
